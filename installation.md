@@ -113,12 +113,10 @@ You can see that the Docker server creates a masquerade rule that let containers
 <pre lang="sh">
 $ sudo iptables -t nat -L -n
 ...
-Chain POSTROUTING (policy ACCEPT) target  prot  opt source  destination
-MASQUERADE                    all -- 172.17.0.0/16
-
-!172.17.0.0/16
-
-…
+Chain POSTROUTING (policy ACCEPT)
+target      prot    opt   source          destination         
+MASQUERADE  all     –     172.17.0.0/16   0.0.0.0/0
+...
 </pre>
 
 在docker网站上有更多关于Docker网络配置的资料。
@@ -782,11 +780,11 @@ removing existing route
 adding route
 valerio@ubuntu-hp:~/docker/gns3-large$ netstat -nr
 Kernel IP routing table
-Destination		Gateway		Genmask		Flags	MSS	Window	irtt	Iface
-0.0.0.0		192.168.2.1	0.0.0.0		UG	0 	0	0	eth0
-10.123.0.0		172.17.0.2	255.255.0.0	UG	0	0	0	docker0
-172.17.0.0		0.0.0.0		255.255.0.0	U	0	0	0	docker0
-192.168.2.0		0.0.0.0		255.255.255.0	U	0	0	0	eth0
+Destination   Gateway       Genmask         Flags   MSS   Window	  irtt  	Iface
+0.0.0.0       192.168.2.1   0.0.0.0		      UG	    0 	  0	        0	      eth0
+10.123.0.0    172.17.0.2    255.255.0.0	    UG	    0	    0	        0	      docker0
+172.17.0.0    0.0.0.0       255.255.0.0	    U	      0	    0	        0	      docker0
+192.168.2.0   0.0.0.0       255.255.255.0	  U	      0	    0	        0	      eth0
 </pre>
 
 
@@ -794,15 +792,23 @@ Destination		Gateway		Genmask		Flags	MSS	Window	irtt	Iface
 
 To connect our emulated network to the Internet we need also to put a route on our ADSL router to reach the 10.123.0.0/16 network using as gateway the IP address of our host (192.168.2.32 in this case). Having done this we can now:
 
-<pre lang="sh">
 ping 172.17.42.1(宿主机的docker0接口）
+
 ping 172.17.42.1 (our host, docker0 interface)
+
 ping 192.168.2.32(主机的eth0接口)
+
 ping 192.168.2.32 (our host, eth0 interface)
+
 ping 192.168.2.1(ADSL路由器)
+
 ping 192.168.2.1 (our ADSL router)
+
 ping 8.8.8.8(互联网上的Google公共DNS服务器)
+
 ping 8.8.8.8 (on the Internet, Google's public DNS server)
+
+<pre lang="sh">
 PC1> ping 172.17.42.1 -c 2
 172.17.42.1 icmp_seq=1 ttl=62 time=19.906 ms
 172.17.42.1 icmp_seq=2 ttl=62 time=15.904 ms
