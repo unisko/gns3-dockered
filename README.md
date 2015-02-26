@@ -1,6 +1,8 @@
-# GNS3 1.2.3 docker image with VPCS, IOU, QEMU and Wireshark
+# GNS3 1.2.3 docker 镜像 with VPCS, IOU, QEMU and Wireshark
 
-### News
+### 新闻
+
+2015-02-26 中国的支持以及时区修正为“Asia/Shanghai”
 
 2015-01-20 Updated GNS3 to version 1.2.3
 
