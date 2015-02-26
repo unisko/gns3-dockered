@@ -1,5 +1,5 @@
 # Version: 0.7.1
-FROM ubuntu:14.04
+FROM dl.dockerpool.com:5000/ubuntu:14.04
 MAINTAINER Valerio Di Giampietro "valerio@digiampietro.com"
 #
 # increase the version to force recompilation of everything
@@ -16,6 +16,7 @@ ENV DEBCONF_NONINTERACTIVE_SEEN true
 # ----------------------------------------------------------------- 
 # install needed packages to build and run gns3 and related sw
 #
+RUN cd /etc/apt; sed -i 's/archive.ubuntu.com/cn.archive.ubuntu.com/g' sources.list
 RUN apt-get update
 RUN apt-get -y install git wget
 RUN apt-get -y install libpcap-dev uuid-dev libelf-dev cmake
@@ -115,4 +116,9 @@ ENV LANG en_US.UTF-8
 ENV LANGUAGE en_US:en  
 ENV LC_ALL en_US.UTF-8  
 RUN chmod a+x /src/misc/startup.sh
+RUN apt-get update
+RUN apt-get -y autoremove
+RUN apt-get -y upgrade
+RUN echo "Asia/Shanghai" > /etc/timezone
+RUN dpkg-reconfigure -f noninteractive tzdata
 ENTRYPOINT cd /src/misc ; ./startup.sh
