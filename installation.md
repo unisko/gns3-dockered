@@ -106,16 +106,20 @@ on the container it adds a default route to the host ip address of 172.17.42.1
 
 on the host it adds a NAT rule to iptables:
 
-# You can see that the Docker server creates a masquerade rule that let containers connect to IP addresses in the outside world:
+你会注意到 Docker 服务器创建了一条 masquerade 规则，以便让容器连接外部世界的 IP 地址:
 
+You can see that the Docker server creates a masquerade rule that let containers connect to IP addresses in the outside world:
+
+<pre lang="sh">
 $ sudo iptables -t nat -L -n
 ...
-Chain POSTROUTING (policy ACCEPT)
-target prot opt source
-destination
-MASQUERADE all -- 172.17.0.0/16
+Chain POSTROUTING (policy ACCEPT) target  prot  opt source  destination
+MASQUERADE                    all -- 172.17.0.0/16
+
 !172.17.0.0/16
+
 …
+</pre>
 
 在docker网站上有更多关于Docker网络配置的资料。
 
@@ -157,6 +161,7 @@ with the -v option the entire current user's home directory is "mounted" inside 
 
 The myrun.sh uses many environment variables that can be personalized, this script is included here:
 
+<pre lang="sh">
 #!/bin/sh
 export GDISPLAY=unix/$DISPLAY
 # forward X11 display to the host machine
@@ -226,6 +231,7 @@ sudo docker run -h gns3-large
 --privileged
 \
 -it digiampietro/gns3-large
+</pre>
 
 此脚本运行digiampietro/gns3-large容器，需要注意的一下重要的地方：
 
@@ -278,6 +284,7 @@ GROUTE2GNS3 if set to 1 tells the startup.sh script to setup a route to the emul
 
 After executing the myrun.sh the gns3-large container is started and it executes the startup.sh script, as specified in the Dockerfile:
 
+<pre lang="sh">
 #!/bin/sh
 #
 # add current user and user's primary group
@@ -328,6 +335,7 @@ su -l $GUSERNAME
 #
 # another root shell
 /bin/bash
+</pre>
 
 搞明白这个脚本所做的事情应该容易的：
 
@@ -373,6 +381,7 @@ when the above shell terminate, runs another shell as root. In this way it is po
 
 When the startup.sh has started the user's shell you are greeted by a standard prompt and you can see that the hostname is not your usual hostname but the name you gave to the container with the -h option, gns3-large in our case:
 
+<pre lang="sh">
 valerio@ubuntu-hp:~/docker/gns3-large$ ./myrun.sh
 [sudo] password for valerio:
 -------------------------------------------------------------------
@@ -385,6 +394,7 @@ Set 'tap0' persistent and owned by uid 1000
 valerio@gns3-large:~$ hostname
 gns3-large
 valerio@gns3-large:~$
+</pre>
 
 ##配置GNS3
 ##Configuring GNS3
@@ -392,8 +402,10 @@ valerio@gns3-large:~$
 
 To use IOU a license file generator is needed, it is usually called keygen.py and must be put in the folder gns3-misc under your home directory as shown below (the container will check this file location, please note that "valerio" is my username, you have to replace "valerio" with your username):
 
+<pre lang="sh">
 valerio@ubuntu-hp:~$ ls ~/gns3-misc/keygen.py
 /home/valerio/gns3-misc/keygen.py
+</pre>
 
 因为法律方面的原因，本容器镜像不能包含此文件，但你可以用关键字“Cisco IOU License Generator v2”在google中进行搜索。（对于搜索或下载该文件是否合法，请咨询你的律师）。在从命令行启动gns3后，我们需要对其进行以下配置：
 
@@ -548,6 +560,7 @@ Now we add the router R1 (the C3725 configured above) the switch IOU1 (the IOU s
 
 We start all devices clicking on Device -> Start, after clicking our CPU load goes very high due to the dynamips process emulating the Cisco router:
 
+<pre lang="sh">
 top - 20:14:35 up 43 min, 3 users, load average: 0,91, 0,57, 0,66
 Tasks: 249 total, 1 running, 247 sleeping, 0 stopped, 1 zombie
 %Cpu(s): 28,5 us, 1,2 sy, 0,0 ni, 62,8 id, 7,5 wa, 0,0 hi, 0,0 si, 0,0 st
@@ -563,11 +576,13 @@ PID USER	PR NI VIRT RES SHR S %CPU %MEM TIME+ COMMAND
 6147 valerio 20 0 840308 144296 36804 S 1,3 1,8 0:38.35 chrome
 8359 valerio 20 0 365028 25352 5900 S 0,7 0,3 0:28.85 gns3server
 15892 valerio 20 0 268056 109336 58444 S 0,7 1,4 0:01.41 i86bi_linu+
+</pre>
 
 为降低CPU的使用，在路由器R1上右击，选择Idle-PC, 再接受那个建议值，之后点击“Apply”按钮并再次检查CPU负载；你可以尝试不同的Idle-PC值以找出有着较低CPU使用的那个；通常默认值就是较好的并能想下面那样显著降低CPU负载，从100%的CPU使用降低到仅2.7%
 
 To lower the CPU usage right click the router R1 and Idle-PC, accept the proposed value, click Apply and check again the CPU load; you can try different values of Idle-PC to find the one with the lower CPU usage; usually the default value is OK and dramatically reduce CPU load as shown below where the dynamips process has moved from 100% CPU usage to only 2.7%
 
+<pre lang="sh">
 top - 20:19:57 up 48 min, 3 users, load average: 0,60, 0,85, 0,77
 Tasks: 247 total, 2 running, 244 sleeping, 0 stopped, 1 zombie
 %Cpu(s): 7,9 us, 3,6 sy, 0,0 ni, 84,9 id, 3,6 wa, 0,0 hi, 0,0 si, 0,0 st
@@ -582,6 +597,7 @@ PID USER PR NI VIRT RES SHR S %CPU %MEM TIME+ COMMAND
 11825 valerio 20 0 687352 275272 197920 S 2,7 3,4 4:57.72 dynamips
 6147 valerio 20 0 844716 135360 37340 S 2,3 1,7 0:45.85 chrome
 15892 valerio 20 0 268056 109336 58444 S 1,3 1,4 0:03.66 i86bi_linu+
+</pre>
 
 tap0 接口的地址为10.123.1.1/24(这是myrun.sh环境变量设定的），因此我们需要连接到路由器R1的控制台并：
 
@@ -599,7 +615,7 @@ configure the IP 10.123.2.1/24 on his f0/1 interface (inside interface)
 
 configure 10.123.1.1 as the defautl gateway
 
-
+<pre lang="sh">
 R1#conf t
 Enter configuration commands, one per line. End with CNTL/Z.
 R1(config)#interface fastethernet 0/0
@@ -619,6 +635,7 @@ R1#
 Building configuration...
 [OK]
 R1#
+</pre>
 
 如此来配置IOU1:
 
@@ -640,7 +657,7 @@ put in no shutdown his interfaces
 
 assign the IP address 10.123.2.2 to the switch's Vlan 1 interface
 
-
+<pre lang="sh">
 IOU1#conf t
 Enter configuration commands, one per line. End with CNTL/Z.
 IOU1(config)#interface range ethernet 0/0 - 3
@@ -684,6 +701,7 @@ IOU1#
 IOU1#write mem
 Building configuration...Compressed configuration from 1421 bytes to 890 bytes[OK]
 IOU1#
+</pre>
 
 
 如此来配置PC1
@@ -692,19 +710,15 @@ to configure PC1
 
 设置IP地址为10.123.2.10/24, 网关为10.123.2.1
 
+<pre lang="sh">
 assign it the IP 10.123.2.10/24 and gateway 10.123.2.1
-
 PC1> ip 10.123.2.10/24 10.123.2.1
-
 Checking for duplicate address...
-
 PC1 : 10.123.2.10 255.255.255.0 gateway 10.123.2.1
-
 PC1> save
-
 . done
-
 PC1>
+</pre>
 
 现在我们可以从每个设备对不同IP地址进行ping操作，比如从PC1进行如下操作：
 
@@ -734,7 +748,7 @@ we can ping 172.17.0.2 (the docker image eth0 IP address)
 
 we cannot ping 172.17.42.1 (the host docker0 IP address)
 
-
+<pre lang="sh">
 PC1> ping 10.123.2.2 -c 2
 10.123.2.2 icmp_seq=1 ttl=255 time=0.604 ms
 10.123.2.2 icmp_seq=2 ttl=255 time=0.559 ms
@@ -753,13 +767,14 @@ PC1> ping 172.17.0.2
 PC1> ping 172.17.42.1 -c 2
 172.17.42.1 icmp_seq=1 timeout
 172.17.42.1 icmp_seq=2 timeout
+</pre>
 
 
 这里我们不能ping通宿主机的docker0接口（也就是接上tap0 的“管线”的另一端），这是因为我们的gns3网络以及docker镜像知道怎样向外部世界发送数据包，但宿主机却不知道往哪里发送到10.123.0.0/16网络的数据包，因此我们需要执行脚本hostroute2gns3来添加所需的路由：
 
 We cannot ping the docker0 host interface (the other end of the "pipe" attached to tap0) because our gns3 network and our docker image know where to send packets to the external world, but the host doesn't know where to send packets to the network 10.123.0.0/16, so we need to execute the script hostroute2gns3 that adds the needed route:
 
-
+<pre lang="sh">
 valerio@ubuntu-hp:~/docker/gns3-large$ sudo ./hostroute2gns3
 Container ID: 2d7205472e80
 Container IP: 172.17.0.2
@@ -772,13 +787,14 @@ Destination		Gateway		Genmask		Flags	MSS	Window	irtt	Iface
 10.123.0.0		172.17.0.2	255.255.0.0	UG	0	0	0	docker0
 172.17.0.0		0.0.0.0		255.255.0.0	U	0	0	0	docker0
 192.168.2.0		0.0.0.0		255.255.255.0	U	0	0	0	eth0
+</pre>
 
 
 为将我们的仿真网络连接至互联网，我们还需要在ADSL路由器上设置一条到达10.123.0.0/16网络的路由，将宿主机的IP地址（此处的192.168.2.32）作为到该网络的默认网关。在完成这些设置后，我们可以做到这些：
 
 To connect our emulated network to the Internet we need also to put a route on our ADSL router to reach the 10.123.0.0/16 network using as gateway the IP address of our host (192.168.2.32 in this case). Having done this we can now:
 
-
+<pre lang="sh">
 ping 172.17.42.1(宿主机的docker0接口）
 ping 172.17.42.1 (our host, docker0 interface)
 ping 192.168.2.32(主机的eth0接口)
@@ -800,6 +816,7 @@ PC1> ping 8.8.8.8 -c 2
 8.8.8.8 icmp_seq=1 ttl=44 time=43.010 ms
 8.8.8.8 icmp_seq=2 ttl=44 time=46.294 ms
 PC1>
+</pre>
 
 ##使用Gnome连接管理器
 ##Using Gnome Connection Manager
@@ -811,7 +828,7 @@ Gnome连接管理器（gcm）有着满足这种需求的特性，但却不能从
 
 Gnome Connection Manager (gcm) has exactly this feature, but cannot be used directly from GNS3, for this reason I wrote a small perl script, gcmconf that reads the GNS3 project files and create, or update, the Gnome Connection Manager configuration file so it will be ultra easy to access all the consoles of our gns3 projects. For example:
 
-
+<pre lang="sh">
 valerio@gns3-large:~$ gcmconf
 opening: /home/valerio/.gcm/gcm.conf
 ---- processing /home/valerio/GNS3/projects/tutorial/tutorial.gns3
@@ -819,4 +836,5 @@ Writing the new /home/valerio/.gcm/gcm.conf file
 valerio@gns3-large:~$ gcm &
 [1] 146
 valerio@gns3-large:~$ gns3
+</pre>
 
