@@ -13,7 +13,7 @@ It also allows to connect the virtual network to the physical network, it is pos
 
 But, because GNS3 glues together many moving parts, it can be troublesome to install everything and to have everything working seamlessly, for this reason i created a Docker image with everything installed, functioning and ready to be used on Linux (or in a Linux virtual machine running in Windows or Mac OSX). 
 
-Docker是另一款有趣软件，与CoreOS和比如Google Kubernetes一样的云计算基础项目一道，是目前正在到来的云计算革命的构筑物。
+Docker 是另一款有趣软件，与 CoreOS 和比如 Google Kubernetes 一样的云计算基础项目一道，是目前正在到来的云计算革命的构筑物。
 
 Docker is another fantastic piece of software that, together with CoreOS and other cloud orchestration projects, like Google's Kubernetes, is one of the building blocks for the incoming Cloud Revolution. 
 
@@ -30,7 +30,8 @@ Another important feature of docker containers is that when they stop nothing is
 
 我之所以将该容器称为gns3-large，是因为它实在是很大块头的，它包含了用于构建那些该镜像中的软件所需要的所有东西。其对应的Dockerfile在gns3-large的GitHub代码仓库上有，该文件包含了实现以下目的的指令：
 
-I called the container gns3-large, because it is quite fat, it contains everything needed to build some software included in the image. The Docker file is available on the GitHub repository for the gns3-large project and contains instructions to 
+I called the container gns3-large, because it is quite fat, it contains everything needed to build some software included in the image. The Docker file is available on the GitHub repository for the gns3-large project and contains instructions to
+
 从Docker Registry官方的最新版Ubuntu(14.04)基础上建立出该镜像
 
 build the image starting from the latest version of Ubuntu (14.04) officially available on the Docker Registry
