@@ -2,7 +2,7 @@
 
 ### 新闻
 
-2015-02-26 中国的支持、/etc/apt/sources.list修改，以及时区修正为“Asia/Shanghai”
+2015-02-26 Support in China Mainland, modified the /etc/apt/sources.list , and  Change the timezone to  "Asia/Shanghai", add a document which transalted from the original author's English version of installation guide.中国的支持、/etc/apt/sources.list修改，以及时区修正为“Asia/Shanghai”, 添加了一篇安装文档，该文档翻译自本项目的原作者
 
 2015-01-20 Updated GNS3 to version 1.2.3
 
